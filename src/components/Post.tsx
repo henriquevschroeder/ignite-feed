@@ -1,39 +1,87 @@
+import { format, formatDistanceToNow } from 'date-fns'
 import { Avatar } from './Avatar'
 import { Comment } from './Comment'
 import styles from './Post.module.css'
+import { useState } from 'react'
 
-export function Post() {
+
+
+interface IPostProps {
+  author: {
+    avatarUrl: string,
+    name: string,
+    role: string
+  },
+  publishedAt: Date,
+  content: { type: string, content: string }[]
+}
+
+export function Post({ author, content, publishedAt }: IPostProps) {
+
+  const [comments, setComments] = useState([
+    'Very good!',
+    'I liked it!',
+  ])
+
+  const [newCommentText, setNewCommentText] = useState('')
+
+  const publishedDateFormatted = format(publishedAt, "LLLL d, y 'at' h b")
+
+  const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
+    addSuffix: true
+  })
+
+  function handleCreateNewComment() {
+    event?.preventDefault()
+    setComments([...comments, newCommentText])
+    setNewCommentText('')
+  }
+
+  function handleNewCommentChange() {
+    setNewCommentText((event?.target as HTMLTextAreaElement).value)
+  }
+
   return (
     <article className={styles.post}>
       <header>
         <div className={styles.author}>
-          <Avatar src="https://github.com/henriquevschroeder.png" />
+          <Avatar src={author.avatarUrl} />
           <div className={styles.authorInfo}>
-            <strong>Henrique Schroeder</strong>
-            <span>Full Stack Developer</span>
+            <strong>{author.name}</strong>
+            <span>{author.role}</span>
           </div>
-        </div>
+        </div> 
 
-        <time title="June 6, 2024 at 9pm" dateTime="2024-06-16 21:00:00">Published 1h ago</time>
+        <time title={publishedDateFormatted} dateTime={publishedAt.toISOString()}>
+          {publishedDateRelativeToNow}
+        </time>
       </header>
 
       <div className={styles.content}>
-        <p>What's up people! 👋</p>
-        <p>I just uploaded another project to my portfolio. It's a project I built during a Rocketseat course. The name of the project is Gympass API🚀</p>
-        <p>
-          <a href="https://github.com/henriquevschroeder/gympass-api">https://github.com/henriquevschroeder/gympass-api</a>
-        </p>
-        <p>
-          <a href="#">#newproject</a>{' '}
-          <a href="#">#nlw</a>{' '}
-          <a href="#">#rocketseat</a>
-        </p>
+        {content.map(line => {
+          if (line.type === 'paragraph') {
+            return (
+              <p key={line.content}>{line.content}</p>
+            )
+          } else if (line.type === 'link') {
+            return (
+              <p key={line.content}>
+                <a href={line.content} target="_blank">{line.content}</a>
+              </p>
+            )
+          }
+        })}
+        
       </div>
 
-      <form className={styles.commentForm}>
+      <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
         <strong>Leave your feedback</strong>
 
-        <textarea placeholder="Leave a oomment" />
+        <textarea
+          name="comment"
+          placeholder="Leave a comment"
+          value={newCommentText}
+          onChange={handleNewCommentChange} />
 
         <footer>
           <button type="submit">Publish</button>
@@ -41,9 +89,13 @@ export function Post() {
       </form>
 
       <div className={styles.commentList}>
-        <Comment />
-        <Comment />
-        <Comment />
+        {comments.map(comment => {
+          return (
+            <Comment 
+              key={comment} 
+              content={comment} />
+          )
+        })}
       </div>
     </article>
   )
