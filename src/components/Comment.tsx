@@ -4,9 +4,14 @@ import { Avatar } from './Avatar'
 
 interface ICommentProps {
   content: string
+  onDeleteComment: (comment: string) => void
 }
 
-export function Comment({ content }: ICommentProps) {
+export function Comment({ content, onDeleteComment }: ICommentProps) {
+  function handleDeleteComment() {
+    onDeleteComment(content)
+  }
+
   return (
     <div className={styles.comment}>
       <Avatar hasBorder={false} src="https://github.com/diego3g.png" />
@@ -19,7 +24,7 @@ export function Comment({ content }: ICommentProps) {
               <time title="June 6, 2024 at 9pm" dateTime="2024-06-16 21:00:00">Around 1h ago</time>
             </div>
 
-            <button title="Delete comment">
+            <button onClick={handleDeleteComment} title="Delete comment">
               <Trash size={24} />
             </button>        
           </header>

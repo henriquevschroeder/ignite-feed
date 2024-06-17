@@ -41,6 +41,11 @@ export function Post({ author, content, publishedAt }: IPostProps) {
     setNewCommentText((event?.target as HTMLTextAreaElement).value)
   }
 
+  function deleteComment(comment: string) {
+    const commentsWithoutDeletedOne = comments.filter(c => c !== comment)
+    setComments(commentsWithoutDeletedOne)
+  }
+
   return (
     <article className={styles.post}>
       <header>
@@ -81,7 +86,8 @@ export function Post({ author, content, publishedAt }: IPostProps) {
           name="comment"
           placeholder="Leave a comment"
           value={newCommentText}
-          onChange={handleNewCommentChange} />
+          onChange={handleNewCommentChange}
+        />
 
         <footer>
           <button type="submit">Publish</button>
@@ -93,7 +99,9 @@ export function Post({ author, content, publishedAt }: IPostProps) {
           return (
             <Comment 
               key={comment} 
-              content={comment} />
+              content={comment}
+              onDeleteComment={deleteComment}
+            />
           )
         })}
       </div>
