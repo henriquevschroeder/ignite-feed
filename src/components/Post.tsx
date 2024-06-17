@@ -2,18 +2,23 @@ import { format, formatDistanceToNow } from 'date-fns'
 import { Avatar } from './Avatar'
 import { Comment } from './Comment'
 import styles from './Post.module.css'
-import { useState } from 'react'
+import { ChangeEvent, InvalidEvent, useState } from 'react'
 
+interface IAuthor {
+  avatarUrl: string,
+  name: string,
+  role: string
+}
 
+interface IContent {
+  type: 'paragraph' | 'link'
+  content: string
+}
 
 interface IPostProps {
-  author: {
-    avatarUrl: string,
-    name: string,
-    role: string
-  },
+  author: IAuthor,
   publishedAt: Date,
-  content: { type: string, content: string }[]
+  content: IContent[]
 }
 
 export function Post({ author, content, publishedAt }: IPostProps) {
@@ -37,13 +42,13 @@ export function Post({ author, content, publishedAt }: IPostProps) {
     setNewCommentText('')
   }
 
-  function handleNewCommentChange() {
-    (event?.target as HTMLTextAreaElement).setCustomValidity('')
+  function handleNewCommentChange(event: ChangeEvent<HTMLTextAreaElement>) {
+    event.target.setCustomValidity('')
     setNewCommentText((event?.target as HTMLTextAreaElement).value)
   }
 
-  function handleNewCommentInvalid() {
-    (event?.target as HTMLTextAreaElement).setCustomValidity('Please, leave a comment before publishing')
+  function handleNewCommentInvalid(event: InvalidEvent<HTMLTextAreaElement>) {
+    event.target.setCustomValidity('Please, leave a comment before publishing')
   }
 
   function deleteComment(comment: string) {
