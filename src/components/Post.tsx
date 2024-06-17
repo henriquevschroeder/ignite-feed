@@ -15,13 +15,18 @@ interface IContent {
   content: string
 }
 
-interface IPostProps {
+export interface IPost {
+  id: number,
   author: IAuthor,
   publishedAt: Date,
   content: IContent[]
 }
 
-export function Post({ author, content, publishedAt }: IPostProps) {
+interface IPostProps {
+  post: IPost
+}
+
+export function Post({ post }: IPostProps) {
 
   const [comments, setComments] = useState([
     'Very good!',
@@ -30,9 +35,9 @@ export function Post({ author, content, publishedAt }: IPostProps) {
 
   const [newCommentText, setNewCommentText] = useState('')
 
-  const publishedDateFormatted = format(publishedAt, "LLLL d, y 'at' h b")
+  const publishedDateFormatted = format(post.publishedAt, "LLLL d, y 'at' h b")
 
-  const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
+  const publishedDateRelativeToNow = formatDistanceToNow(post.publishedAt, {
     addSuffix: true
   })
 
@@ -62,20 +67,20 @@ export function Post({ author, content, publishedAt }: IPostProps) {
     <article className={styles.post}>
       <header>
         <div className={styles.author}>
-          <Avatar src={author.avatarUrl} />
+          <Avatar src={post.author.avatarUrl} />
           <div className={styles.authorInfo}>
-            <strong>{author.name}</strong>
-            <span>{author.role}</span>
+            <strong>{post.author.name}</strong>
+            <span>{post.author.role}</span>
           </div>
         </div> 
 
-        <time title={publishedDateFormatted} dateTime={publishedAt.toISOString()}>
+        <time title={publishedDateFormatted} dateTime={post.publishedAt.toISOString()}>
           {publishedDateRelativeToNow}
         </time>
       </header>
 
       <div className={styles.content}>
-        {content.map(line => {
+        {post.content.map(line => {
           if (line.type === 'paragraph') {
             return (
               <p key={line.content}>{line.content}</p>
