@@ -38,13 +38,20 @@ export function Post({ author, content, publishedAt }: IPostProps) {
   }
 
   function handleNewCommentChange() {
+    (event?.target as HTMLTextAreaElement).setCustomValidity('')
     setNewCommentText((event?.target as HTMLTextAreaElement).value)
+  }
+
+  function handleNewCommentInvalid() {
+    (event?.target as HTMLTextAreaElement).setCustomValidity('Please, leave a comment before publishing')
   }
 
   function deleteComment(comment: string) {
     const commentsWithoutDeletedOne = comments.filter(c => c !== comment)
     setComments(commentsWithoutDeletedOne)
   }
+
+  const isNewCommentEmpty = newCommentText.length === 0
 
   return (
     <article className={styles.post}>
@@ -87,10 +94,16 @@ export function Post({ author, content, publishedAt }: IPostProps) {
           placeholder="Leave a comment"
           value={newCommentText}
           onChange={handleNewCommentChange}
+          onInvalid={handleNewCommentInvalid}
+          required
         />
 
         <footer>
-          <button type="submit">Publish</button>
+          <button
+            type="submit"
+            disabled={isNewCommentEmpty}>
+            Publish
+          </button>
         </footer>
       </form>
 
