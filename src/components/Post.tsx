@@ -1,3 +1,4 @@
+import { Avatar } from './Avatar'
 import { Comment } from './Comment'
 import styles from './Post.module.css'
 
@@ -6,7 +7,7 @@ export function Post() {
     <article className={styles.post}>
       <header>
         <div className={styles.author}>
-          <img className={styles.avatar} src="https://github.com/henriquevschroeder.png" />
+          <Avatar src="https://github.com/henriquevschroeder.png" />
           <div className={styles.authorInfo}>
             <strong>Henrique Schroeder</strong>
             <span>Full Stack Developer</span>
@@ -20,7 +21,7 @@ export function Post() {
         <p>What's up people! 👋</p>
         <p>I just uploaded another project to my portfolio. It's a project I built during a Rocketseat course. The name of the project is Gympass API🚀</p>
         <p>
-          <a href="https://github.com/henriquevschroeder/gympass-api">  https://github.com/henriquevschroeder/gympass-api</a>
+          <a href="https://github.com/henriquevschroeder/gympass-api">https://github.com/henriquevschroeder/gympass-api</a>
         </p>
         <p>
           <a href="#">#newproject</a>{' '}
